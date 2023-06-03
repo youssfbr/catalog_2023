@@ -31,9 +31,8 @@ public class CategoryService implements ICategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
-        return categoryRepository.findById(id)
-                .map(CategoryDTO::new)
-                .orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
+        Category entity = findCategoryById(id);
+        return new CategoryDTO(entity);
     }
 
     @Override
@@ -46,6 +45,23 @@ public class CategoryService implements ICategoryService {
         entity = categoryRepository.save(entity);
 
         return new CategoryDTO(entity);
+    }
+
+    @Override
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO dto) {
+
+        Category entity = findCategoryById(id);
+        entity.setName(dto.getName());
+
+        entity = categoryRepository.save(entity);
+
+        return new CategoryDTO(entity);
+    }
+
+    private Category findCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
     }
 
 }

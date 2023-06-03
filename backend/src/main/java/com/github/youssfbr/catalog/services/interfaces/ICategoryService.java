@@ -9,5 +9,6 @@ public interface ICategoryService {
     List<CategoryDTO> findAll();
     CategoryDTO findById(Long id);
     CategoryDTO insert(CategoryDTO dto);
+    CategoryDTO update(Long id, CategoryDTO dto);
 
 }
