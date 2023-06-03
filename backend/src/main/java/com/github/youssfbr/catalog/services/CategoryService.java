@@ -4,6 +4,7 @@ import com.github.youssfbr.catalog.entities.Category;
 import com.github.youssfbr.catalog.repositories.ICategoryRepository;
 import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
