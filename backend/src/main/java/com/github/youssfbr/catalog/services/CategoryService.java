@@ -1,6 +1,7 @@
 package com.github.youssfbr.catalog.services;
 
 import com.github.youssfbr.catalog.dtos.CategoryDTO;
+import com.github.youssfbr.catalog.entities.Category;
 import com.github.youssfbr.catalog.repositories.ICategoryRepository;
 import com.github.youssfbr.catalog.services.exceptions.ResourceNotFoundException;
 import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
@@ -33,6 +34,18 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findById(id)
                 .map(CategoryDTO::new)
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
+    }
+
+    @Override
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+
+        Category entity = new Category();
+        entity.setName(dto.getName());
+
+        entity = categoryRepository.save(entity);
+
+        return new CategoryDTO(entity);
     }
 
 }
