@@ -1,5 +1,6 @@
 package com.github.youssfbr.catalog.services;
 
+import com.github.youssfbr.catalog.dtos.CategoryDTO;
 import com.github.youssfbr.catalog.entities.Category;
 import com.github.youssfbr.catalog.repositories.ICategoryRepository;
 import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
@@ -19,8 +20,11 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> findAll() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryDTO::new)
+                .toList();
     }
 
 }
