@@ -1,8 +1,8 @@
 package com.github.youssfbr.catalog.services;
 
 import com.github.youssfbr.catalog.dtos.CategoryDTO;
-import com.github.youssfbr.catalog.entities.Category;
 import com.github.youssfbr.catalog.repositories.ICategoryRepository;
+import com.github.youssfbr.catalog.services.exceptions.ResourceNotFoundException;
 import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,14 @@ public class CategoryService implements ICategoryService {
                 .stream()
                 .map(CategoryDTO::new)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CategoryDTO findById(Long id) {
+        return categoryRepository.findById(id)
+                .map(CategoryDTO::new)
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found."));
     }
 
 }
