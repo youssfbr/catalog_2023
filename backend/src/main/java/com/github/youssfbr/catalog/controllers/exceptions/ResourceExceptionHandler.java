@@ -1,5 +1,6 @@
 package com.github.youssfbr.catalog.controllers.exceptions;
 
+import com.github.youssfbr.catalog.services.exceptions.DatabaseException;
 import com.github.youssfbr.catalog.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,30 @@ public class ResourceExceptionHandler {
             HttpServletRequest request)
     {
 
-        HttpStatus notFound = HttpStatus.NOT_FOUND;
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         StandardError error = new StandardError();
-        error.setStatus(notFound.value());
+        error.setStatus(status.value());
         error.setError("Resource not found.");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
-        return ResponseEntity.status(notFound).body(error);
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> databaseException (
+            DatabaseException e,
+            HttpServletRequest request)
+    {
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        StandardError error = new StandardError();
+        error.setStatus(status.value());
+        error.setError("Database exception");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
     }
 
 }
