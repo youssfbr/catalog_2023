@@ -1,7 +1,10 @@
 package com.github.youssfbr.catalog.services;
 
+import com.github.youssfbr.catalog.dtos.CategoryDTO;
 import com.github.youssfbr.catalog.dtos.ProductDTO;
+import com.github.youssfbr.catalog.entities.Category;
 import com.github.youssfbr.catalog.entities.Product;
+import com.github.youssfbr.catalog.repositories.ICategoryRepository;
 import com.github.youssfbr.catalog.repositories.IProductRepository;
 import com.github.youssfbr.catalog.services.exceptions.DatabaseException;
 import com.github.youssfbr.catalog.services.exceptions.ResourceNotFoundException;
@@ -18,9 +21,11 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     private IProductRepository productRepository;
+    private ICategoryRepository categoryRepository;
 
-    public ProductService(IProductRepository productRepository) {
+    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -52,24 +57,25 @@ public class ProductService implements IProductService {
     public ProductDTO insert(ProductDTO dto) {
 
         Product entity = new Product();
-        entity.setName(dto.getName());
+
+        copyDtoToEntity(dto, entity);
 
         entity = productRepository.save(entity);
 
-        return new ProductDTO(entity);
+        return new ProductDTO(entity, entity.getCategories());
     }
-
 
     @Override
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
 
         Product entity = findProductById(id);
-        entity.setName(dto.getName());
+
+        copyDtoToEntity(dto, entity);
 
         entity = productRepository.save(entity);
 
-        return new ProductDTO(entity);
+        return new ProductDTO(entity, entity.getCategories());
     }
 
     @Override
@@ -86,6 +92,22 @@ public class ProductService implements IProductService {
     private Product findProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id " + id + " not found."));
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
+
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setPrice(dto.getPrice());
+        entity.setImgUrl(dto.getImgUrl());
+
+        entity.getCategories().clear();
+
+        for (CategoryDTO catDto : dto.getCategories()) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            entity.getCategories().add(category);
+        }
     }
 
 }
