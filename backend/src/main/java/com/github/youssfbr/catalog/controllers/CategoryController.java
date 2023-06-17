@@ -4,6 +4,7 @@ import com.github.youssfbr.catalog.dtos.CategoryDTO;
 import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +30,8 @@ public class CategoryController {
     }
 
     @GetMapping("/paged")
-    public Page<CategoryDTO> findAllPaged(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
-    ) {
-
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-
-        return categoryService.findAllPaged(pageRequest);
+    public Page<CategoryDTO> findAllPaged(Pageable pageable) {
+        return categoryService.findAllPaged(pageable);
     }
 
     @GetMapping("/{id}")

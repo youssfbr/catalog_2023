@@ -9,6 +9,7 @@ import com.github.youssfbr.catalog.services.interfaces.ICategoryService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +35,9 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+    public Page<CategoryDTO> findAllPaged(Pageable pageable) {
         return categoryRepository
-                .findAll(pageRequest)
+                .findAll(pageable)
                 .map(CategoryDTO::new);
     }
 

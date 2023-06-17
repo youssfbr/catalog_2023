@@ -19,7 +19,7 @@ public class ResourceExceptionHandler {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        StandardError error = new StandardError();
+        StandardError error = new StandardError ();
         error.setStatus(status.value());
         error.setError("Resource not found.");
         error.setMessage(e.getMessage());

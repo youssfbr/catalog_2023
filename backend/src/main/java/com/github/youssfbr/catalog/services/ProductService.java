@@ -11,7 +11,7 @@ import com.github.youssfbr.catalog.services.exceptions.ResourceNotFoundException
 import com.github.youssfbr.catalog.services.interfaces.IProductService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +39,9 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
+    public Page<ProductDTO> findAllPaged(Pageable pageable) {
         return productRepository
-                .findAll(pageRequest)
+                .findAll(pageable)
                 .map(ProductDTO::new);
     }
 
